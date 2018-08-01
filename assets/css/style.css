@@ -51,7 +51,7 @@ input {
     width: 100%;
     padding: 13px 13px 13px 20px;
     font-family: 'Roboto', sans-serif;
-    color: #2980b9;
+    color: #f7797d;
     /* The border line here is VERY VALUABLE -- 
         allows you to force the input from knocking aside other elements when active
         by giving it an invisible border when inactive equal to the size of the border it gets when active */
