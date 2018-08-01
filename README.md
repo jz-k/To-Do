@@ -1,5 +1,6 @@
 # To-Do
 
+<img src="https://github.com/jzkarap/To-Do/blob/master/to-do.gif?raw=true">
 
 To add:
 
