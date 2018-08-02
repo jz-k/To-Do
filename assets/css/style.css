@@ -96,3 +96,11 @@ li:hover span {
     float: right;
     margin-top: 2px;
 }
+
+.truncate {
+    width: 380px;
+    padding-right: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
