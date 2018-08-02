@@ -4,6 +4,7 @@
 
 To add:
 
+- Mobile layout
 - Ability to directly edit existing tasks
 - Animated background gradient
 - Database communication to save tasks
