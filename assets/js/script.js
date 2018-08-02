@@ -9,18 +9,29 @@ if (typeof (Storage) !== "undefined") {
 // List our todos, pulled from local storage
 listTodos();
 
+addToolTips();
+
 // If we have an array of to-dos, list each one
 function listTodos() {
     if (todoList) {
         todoList.forEach(function (todo) {
-            $("ul").append("<li class=\"truncate\"><span><i class=\"fas fa-trash-alt\"></i></span>" + todo + "</li>");
+            if (todo.length > 50) {
+                $("ul").append("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todo + "<span class=\"tooltiptext\">" + todo + "</span></li>");
+            } else {
+                $("ul").append("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todo + "</li>");
+            }
         });
     }
 }
 
 // Show the most recently added to-do
 function updateTodos() {
-    $("ul").prepend("<li class=\"truncate\"><span><i class=\"fas fa-trash-alt\"></i></span>" + todoList[0] + "</li>");
+    if (todoList[0].length > 50) {
+        $("ul").prepend("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todoList[0] + "<span class=\"tooltiptext\">" + todoList[0] + "</span></li>");
+        addToolTips();
+    } else {
+        $("ul").prepend("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todoList[0] + "</li>");
+    }
 }
 
 // Check off to-dos by clicking
@@ -32,7 +43,7 @@ $("ul").on("click", "li", function () {
 });
 
 // Click on trash icon to delete to-do
-$("ul").on("click", "span", function (event) {
+$("ul").on("click", ".delete", function (event) {
     // "span" is passed in as "event"
     // jQuery method stopPropagation() prevents event bubbling,
     // so only the span containing x is triggered, and the event does not bubble up to parent elements
@@ -44,7 +55,12 @@ $("ul").on("click", "span", function (event) {
         // "this" below refers to the li, not the span -- it is "this" parent element passed from above!
 
         // Get the index of a to-do array element which shares content with the to-do item which has been selected
-        let index = todoList.indexOf(this.innerText);
+        // We use jQuery to get the contents only of the second child (by index) of the list element selected --- 
+        // we don't want to also pull tooltip text
+        let innerContent = $($(this).contents()[1]).text();
+        // Get the index of item to remove from todoList
+        let index = todoList.indexOf(innerContent);
+
         if (index > -1) {
             // Cut selected to-do from our array
             todoList.splice(index, 1);
@@ -101,3 +117,24 @@ $("h1").on("click", ".far", function () {
     }
 })
 
+// My intention with the below code was to apply the mousemove to the ul, so that every new
+// tooltip would be bound to mouse position immediately, without having to explicitly call addToolTips()... but it doesn't work
+
+// If you can fix this, let me know
+
+// $("ul").on("window.onmousemove", ".tooltiptext", function (event) {
+// })
+
+function addToolTips() {
+
+    let tooltips = document.querySelectorAll('.tooltiptext');
+
+    window.onmousemove = function (event) {
+        var x = (event.clientX + 20) + 'px',
+            y = (event.clientY + 20) + 'px';
+        for (var i = 0; i < tooltips.length; i++) {
+            tooltips[i].style.top = y;
+            tooltips[i].style.left = x;
+        }
+    }
+};

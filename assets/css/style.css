@@ -92,6 +92,11 @@ li:hover span {
     text-decoration: line-through;
 }
 
+.completed .tooltiptext {
+    text-decoration: line-through;
+    opacity: 0;
+}
+
 .far {
     float: right;
     margin-top: 2px;
@@ -104,3 +109,29 @@ li:hover span {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  /* Tooltip text */
+.truncate .tooltiptext {
+    visibility: hidden;
+    color: #666;
+    background: rgba(0,0,0,.05);
+    height: auto;
+    right: 18%;
+    line-height: auto;
+    text-align: center;
+    border-radius: 6px;
+    /* Forces tooltip off screen to avoid glitch where tooltip appears at top of screen before javascript is able to bind it to cursor */
+    /* top: -500px; */
+    position: absolute;
+    z-index: 1;
+    padding: 2% 4%;
+    transition: .6s linear;
+    width: 400px;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.truncate:hover .tooltiptext {
+    visibility: visible;
+}
