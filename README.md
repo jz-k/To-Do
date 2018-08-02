@@ -2,6 +2,8 @@
 
 <img src="https://github.com/jzkarap/To-Do/blob/master/to-do.gif?raw=true">
 
+To-Do creates a persistent array of to-do tasks using your browser's local storage. 
+
 To add:
 
 - Mobile layout
