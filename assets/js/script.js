@@ -1,3 +1,4 @@
+// Initializes an array of to-dos
 let todoList = [];
 
 // If we have some local storage,
@@ -8,8 +9,6 @@ if (typeof (Storage) !== "undefined") {
 
 // List our todos, pulled from local storage
 listTodos();
-
-addToolTips();
 
 // If we have an array of to-dos, list each one
 function listTodos() {
@@ -28,7 +27,6 @@ function listTodos() {
 function updateTodos() {
     if (todoList[0].length > 50) {
         $("ul").prepend("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todoList[0] + "<span class=\"tooltiptext\">" + todoList[0] + "</span></li>");
-        addToolTips();
     } else {
         $("ul").prepend("<li class=\"truncate\"><span class=\"delete\"><i class=\"fas fa-trash-alt\"></i></span>" + todoList[0] + "</li>");
     }
@@ -83,7 +81,6 @@ $("input[type='text']").keypress(function (event) {
         $(this).val("");
         // Create new to-do
         if (typeof (Storage) !== "undefined") {
-            // Store
             if (todoList) {
                 // Add new to-do to beginning of our to-do list
                 todoList.unshift(newTodo);
@@ -91,15 +88,13 @@ $("input[type='text']").keypress(function (event) {
             else {
                 todoList = [newTodo];
             }
+
             localStorage.setItem("ToDos", JSON.stringify(todoList));
-            // Retrieve
-            // newTodo = JSON.parse((localStorage.getItem("ToDos")));
+
             updateTodos();
         } else {
-            $(this).innerHTML = "Sorry, your browser does not support Web Storage...";
+            $(this).innerHTML = "Looks like we can't write to your local storage.";
         }
-        // Appends given string to whatever element is selected
-        // $("ul").append("<li class=\"truncate\"><span><i class=\"fas fa-trash-alt\"></i></span> " + newTodo + "</li>");
     }
 })
 
@@ -117,24 +112,49 @@ $("h1").on("click", ".far", function () {
     }
 })
 
-// My intention with the below code was to apply the mousemove to the ul, so that every new
-// tooltip would be bound to mouse position immediately, without having to explicitly call addToolTips()... but it doesn't work
-
-// If you can fix this, let me know
-
-// $("ul").on("window.onmousemove", ".tooltiptext", function (event) {
-// })
-
-function addToolTips() {
+// Gets all tooltips at page load,
+// and considers all new tooltips,
+// surfaces them when a list item is hovered
+$("ul").on("mouseover", "li", function (event) {
 
     let tooltips = document.querySelectorAll('.tooltiptext');
 
     window.onmousemove = function (event) {
-        var x = (event.clientX + 20) + 'px',
-            y = (event.clientY + 20) + 'px';
-        for (var i = 0; i < tooltips.length; i++) {
+        let x = (event.clientX + 100) + 'px';
+        let y = (event.clientY + 20) + 'px';
+        for (let i = 0; i < tooltips.length; i++) {
+            let check = tooltips[i].getBoundingClientRect();
+            tooltips[i].style.display = 'inline-block';
             tooltips[i].style.top = y;
             tooltips[i].style.left = x;
+            tooltips[i].style.visibility = 'visible';
         }
     }
-};
+});
+
+// Gets all tooltips at page load,
+// and considers all new tooltips,
+// fades them out when list item is exited,
+// and then sets them to display: none
+$("ul").on("mouseleave", "li", function (event) {
+
+    let tooltips = document.querySelectorAll('.tooltiptext');
+
+    window.onmousemove = function (event) {
+
+        for (let i = 0; i < tooltips.length; i++) {
+            // Sets visibility to none, so that CSS begins fade out transition
+            tooltips[i].style.visibility = 'hidden';
+            // Waits for transition to end,
+            tooltips[i].addEventListener("transitionEnd", function (event) {
+                // and then sets tooltip to not display
+                // (this prevents page from scrolling due to invisible tooltip being dragged past window edge)
+                tooltips[i].style.display = "none";
+            });
+        }
+    }
+});
+
+// $("ul").on("mouseover", ".tooltiptext", function(event) {
+//     $(this).css.display = "none";
+// })
